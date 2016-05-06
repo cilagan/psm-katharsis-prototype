@@ -11,10 +11,10 @@ public class Directorate {
 	@JsonApiId
 	private String id;
 	
-	@JsonProperty("directorateDesc")
+	@JsonProperty
 	private String description;
 	
-	@JsonProperty("directorateId")
+	@JsonProperty
 	private String code;
 
 	public String getId() {

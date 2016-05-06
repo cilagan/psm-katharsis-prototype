@@ -24,7 +24,7 @@ public class DivisionMapperCode  implements RowMapper<Division> {
 		if (rs.getString("divisionCode") != null) {
 			division = new Division();
 
-			division.setDivisionCode((rs.getString("divisionCode")));// divisionCode
+			division.setId((rs.getString("divisionCode")));// divisionCode
 			
 		} else {
 			division = null;

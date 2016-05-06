@@ -8,7 +8,7 @@ import gov.nsf.research.psm.dao.ProposalDao;
 import gov.nsf.research.psm.model.Directorate;
 import gov.nsf.research.psm.model.Division;
 import gov.nsf.research.psm.model.FundingOpportunity;
-import gov.nsf.research.psm.model.ProgramElement;
+import gov.nsf.research.psm.model.Program;
 import gov.nsf.research.psm.service.ProposalManagementService;
 
 public class ProposalManagementServiceImpl implements ProposalManagementService {
@@ -38,7 +38,7 @@ public class ProposalManagementServiceImpl implements ProposalManagementService 
 	}
 
 	@Override
-	public List<ProgramElement> getAllProgramElements() {
+	public List<Program> getAllProgramElements() {
 		System.out
 				.println("ProposalManagementServiceImpl.getAllProgramElements()");
 		return proposalDao.getAllProgramElements();

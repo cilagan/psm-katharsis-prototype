@@ -10,7 +10,7 @@ import gov.nsf.research.psm.dao.ProposalDao;
 import gov.nsf.research.psm.model.Directorate;
 import gov.nsf.research.psm.model.Division;
 import gov.nsf.research.psm.model.FundingOpportunity;
-import gov.nsf.research.psm.model.ProgramElement;
+import gov.nsf.research.psm.model.Program;
 //import gov.nsf.research.psm.model.Division;
 //import gov.nsf.research.psm.model.FundingOpportunity;
 //import gov.nsf.research.psm.model.ProgramElement;
@@ -19,10 +19,9 @@ import gov.nsf.research.psm.storedprocedure.SPGetAllDivisions;
 //import gov.nsf.research.psm.storeprocedure.SPGetAllDivisions;
 import gov.nsf.research.psm.storedprocedure.SPGetAllFundingOpportunities;
 import gov.nsf.research.psm.storedprocedure.SPGetAllProgramElement;
-//import gov.nsf.research.psm.storeprocedure.SPGetAllProgramElement;
 import gov.nsf.research.psm.storedprocedure.SPGetDirectoratesByFundID;
-//import gov.nsf.research.psm.storeprocedure.SPGetDivisionsByFundID;
-//import gov.nsf.research.psm.storeprocedure.SPGetProgramElementByDivID;
+import gov.nsf.research.psm.storedprocedure.SPGetDivisionsByFundID;
+import gov.nsf.research.psm.storedprocedure.SPGetProgramElementByDivID;
 
 public class ProposalDaoImpl implements ProposalDao {
 
@@ -49,17 +48,41 @@ public class ProposalDaoImpl implements ProposalDao {
 		List<FundingOpportunity> fundingOpportunityList = (List<FundingOpportunity>) result
 				.get(SPGetAllFundingOpportunities.RESULT_SET);
 
+
+		
+		//TODO: Update the getDirectorateByFundingOpId SP to return all the data we need		
+		List<Directorate> dirFullList = getAllDirectorates();
+		List<Division> divFullList = getAllDivisions();
+		
 		for (FundingOpportunity fundingOpportunity : fundingOpportunityList) {
 
-			fundingOpportunity.setDirectorateList(getDirectorateByFundID(fundingOpportunity.getFundingOpportunityId()));
-			//fundingOpportunity.setDivisionList(getDivisionsByFundingOpportunity(fundingOpportunity.getFundingOpportunityId()));
+			List<Directorate> fundingOpDirList = getDirectorateByFundID(fundingOpportunity.getFundingOpportunityId());
+			List<Division> fundingOpDivList = getDivisionsByFundingOpportunity(fundingOpportunity.getFundingOpportunityId());
+			
+			for(Directorate fundingOpDir : fundingOpDirList) {
+				for(Directorate dirFull : dirFullList) {
+					if(fundingOpDir.getId().equals(dirFull.getId())){
+						fundingOpportunity.getDirectorateList().add(dirFull);
+					}
+				}
+			}
+			
+			for(Division fundingOpDiv : fundingOpDivList) {
+				for(Division divFull : divFullList) {
+					if(fundingOpDiv.getId().equals(divFull.getId())){
+						fundingOpportunity.getDivisionList().add(divFull);
+					}
+				}
+			}
+			
+			//fundingOpportunity.getDirectorateList().addAll(fundingOpDirList);
 
 		}
+		
 
 		return fundingOpportunityList;
 	}
 
-	//DONE
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Division> getAllDivisions() {
@@ -73,17 +96,26 @@ public class ProposalDaoImpl implements ProposalDao {
 				.get(SPGetAllDivisions.RESULT_SET);
 
 		//setting program element code list for each division
+		List<Program> progEleFullList = getAllProgramElements();
 		for (Division division : divisionsList) {
 
-			//division.setProgramElementList(getProgramElementCode(division.getDivisionCode()));
-
+			List<Program> divProgEleList = getProgramElementCode(division.getDivisionCode());
+			
+			for(Program divisionProgEle : divProgEleList) {
+				for(Program progEle : progEleFullList) {
+					if(divisionProgEle.getId().equals(progEle.getId())){
+						division.getProgramElementList().add(progEle);
+					}
+				}
+			}
 		}
 
 		return divisionsList;
 	}
 
 	
-/*
+
+	@SuppressWarnings("unchecked")
 	private List<Division> getDivisionsByFundingOpportunity(String pgmAnncID) {
 		SPGetDivisionsByFundID sPGetDivisions = new SPGetDivisionsByFundID(
 				psmFLJdbcTemplate.getDataSource(),
@@ -94,9 +126,8 @@ public class ProposalDaoImpl implements ProposalDao {
 		return (List<Division>) result
 				.get(SPGetDivisionsByFundID.RESULT_SET);
 	}
-*/
+
 	
-	//Done
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Directorate> getAllDirectorates() {
@@ -112,22 +143,21 @@ public class ProposalDaoImpl implements ProposalDao {
 
 		return directorateList;
 	}
-/*
-	//done
+
 	@SuppressWarnings("unchecked")
-	private List<ProgramElement> getProgramElementCode(String divisionCode) {
+	private List<Program> getProgramElementCode(String divisionCode) {
 		SPGetProgramElementByDivID sPGetProgramElementByDivID = new SPGetProgramElementByDivID(
 				psmFLJdbcTemplate.getDataSource(),
 				SPGetProgramElementByDivID.STORED_PROC_GET_PROGRAMELEMENT_LIST_BY_DIV_CODE);
 
 		Map<String, Object> result = sPGetProgramElementByDivID.execute(divisionCode);
 
-		List<ProgramElement> sPGetProgramElementList = (List<ProgramElement>) result
+		List<Program> sPGetProgramElementList = (List<Program>) result
 				.get(SPGetProgramElementByDivID.RESULT_SET);
 
 		return sPGetProgramElementList;
 	}
-*/
+
 	@SuppressWarnings("unchecked")
 	private List<Directorate> getDirectorateByFundID(String pgmAnncID) {
 
@@ -146,14 +176,14 @@ public class ProposalDaoImpl implements ProposalDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ProgramElement> getAllProgramElements() {
+	public List<Program> getAllProgramElements() {
 		SPGetAllProgramElement sPGetAllProgramElement = new SPGetAllProgramElement(
 				psmFLJdbcTemplate.getDataSource(),
 				SPGetAllProgramElement.STORED_PROC_GET_ALL_PROGRAMELEMENT_LIST);
 
 		Map<String, Object> result = sPGetAllProgramElement.execute();
 
-		List<ProgramElement> sPGetAllProgramElementList = (List<ProgramElement>) result
+		List<Program> sPGetAllProgramElementList = (List<Program>) result
 				.get(SPGetAllProgramElement.RESULT_SET);
 
 		return sPGetAllProgramElementList;

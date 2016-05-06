@@ -1,13 +1,13 @@
 package gov.nsf.research.psm.storedprocedure.mapper;
 
-import gov.nsf.research.psm.model.ProgramElement;
+import gov.nsf.research.psm.model.Program;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-public class ProgramElementMapper implements RowMapper<ProgramElement> {
+public class ProgramElementMapper implements RowMapper<Program> {
 
 	/*
 	 * (non-Javadoc)
@@ -16,13 +16,13 @@ public class ProgramElementMapper implements RowMapper<ProgramElement> {
 	 * int)
 	 */
 	@Override
-	public final ProgramElement mapRow(ResultSet rs, int rowNum)
+	public final Program mapRow(ResultSet rs, int rowNum)
 			throws SQLException {
 
-		ProgramElement programElement;
+		Program programElement;
 
 		if (rs.getString("pgmEleCode") != null) {
-			programElement = new ProgramElement();
+			programElement = new Program();
 
 			programElement.setId((rs.getString("pgmEleCode")));
 			programElement.setProgramElementCode((rs.getString("pgmEleCode")));// pgmEleCode

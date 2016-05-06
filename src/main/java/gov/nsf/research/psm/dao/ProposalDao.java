@@ -6,7 +6,7 @@ import gov.nsf.research.psm.model.Directorate;
 import gov.nsf.research.psm.model.Division;
 //import gov.nsf.research.psm.model.Division;
 import gov.nsf.research.psm.model.FundingOpportunity;
-import gov.nsf.research.psm.model.ProgramElement;
+import gov.nsf.research.psm.model.Program;
 
 /**
  * @author spendyal
@@ -39,6 +39,6 @@ public interface ProposalDao {
 	 * @param divisionCode
 	 * @return
 	 */
-	public List<ProgramElement> getAllProgramElements();
+	public List<Program> getAllProgramElements();
 
 }

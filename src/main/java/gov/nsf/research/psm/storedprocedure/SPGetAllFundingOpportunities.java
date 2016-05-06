@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 public class SPGetAllFundingOpportunities extends StoredProcedure {
 
 	public static final String STORED_PROC_GET_FUND_OPPORTUNITY = "flp.pr_psm_sel_fund_oppr";
+	//public static final String STORED_PROC_GET_FUND_OPPORTUNITY = "flp.pr_psm_sel_fund_oppr_new";
 	public static final String RESULT_SET = "FundingOpportunity";
 
 	public SPGetAllFundingOpportunities() {
