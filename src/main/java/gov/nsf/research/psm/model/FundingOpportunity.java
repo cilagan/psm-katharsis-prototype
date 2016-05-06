@@ -1,14 +1,14 @@
 package gov.nsf.research.psm.model;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.katharsis.resource.annotations.JsonApiId;
+import io.katharsis.resource.annotations.JsonApiIncludeByDefault;
 import io.katharsis.resource.annotations.JsonApiResource;
 import io.katharsis.resource.annotations.JsonApiToMany;
-
 /**
  * Proposal Funding Opportunity
  * 
@@ -21,37 +21,38 @@ public class FundingOpportunity {
 	@JsonApiId
 	private String id;
 	
-	@JsonProperty
+	@JsonProperty("code")
 	private String fundingOpportunityId;
 	
-	@JsonProperty
-	private String fundingOpportunityType;
-	
-	@JsonProperty
-	private Date fundingOpportunityDeadline;
-	
-	@JsonProperty
+	@JsonProperty("title")
 	private String fundingOpportunityTitle;
 	
-	@JsonApiToMany
+
+	@JsonProperty("directorates")
+	@JsonApiIncludeByDefault
+	@JsonApiToMany(lazy=false)
 	private List<Directorate> directorateList;
-	//private List<Division> divisionList;
+	
+	
+	
+	@JsonProperty("divisions")
+	@JsonApiIncludeByDefault
+	@JsonApiToMany(lazy=false)
+	private List<Division> divisionList;
+	
 	
 	/**
 	 * 
 	 * @return
 	 */
-	/*public List<Division> getDivisionList() {
+	
+	public List<Division> getDivisionList() {
+		if(divisionList == null) {
+			divisionList = new ArrayList<Division>();
+		}
 		return divisionList;
-	}*/
+	}
 
-	/**
-	 * 
-	 * @param divisionList
-	 */
-	/*public void setDivisionList(List<Division> divisionList) {
-		this.divisionList = divisionList;
-	}*/
 
 	public String getId() {
 		return id;
@@ -68,10 +69,6 @@ public class FundingOpportunity {
 	public String getFundingOpportunityTitle() {
 		return fundingOpportunityTitle;
 	}
-	/**
-	 * 
-	 * @param fundingOpportunityTitle
-	 */
 	
 	/**
 	 * 
@@ -87,18 +84,11 @@ public class FundingOpportunity {
 	 */
 	
 	public List<Directorate> getDirectorateList() {
+		if(directorateList == null) {
+			directorateList = new ArrayList<Directorate>();
+		}
 		return directorateList;
 	}
-	
-	/**
-	 * 
-	 * @param directorateList
-	 */
-	
-	public void setDirectorateList(List<Directorate> directorateList) {
-		this.directorateList = directorateList;
-	}
-
 	
 	
 	/**
@@ -113,28 +103,5 @@ public class FundingOpportunity {
 	public void setFundingOpportunityId(String fundingOpportunityId) {
 		this.fundingOpportunityId = fundingOpportunityId;
 	}
-	/**
-	 * @return the fundingOpportunityType
-	 */
-	public String getFundingOpportunityType() {
-		return fundingOpportunityType;
-	}
-	/**
-	 * @param fundingOpportunityType the fundingOpportunityType to set
-	 */
-	public void setFundingOpportunityType(String fundingOpportunityType) {
-		this.fundingOpportunityType = fundingOpportunityType;
-	}
-	/**
-	 * @return the fundingOpportunityDeadline
-	 */
-	public Date getFundingOpportunityDeadline() {
-		return fundingOpportunityDeadline;
-	}
-	/**
-	 * @param fundingOpportunityDeadline the fundingOpportunityDeadline to set
-	 */
-	public void setFundingOpportunityDeadline(Date fundingOpportunityDeadline) {
-		this.fundingOpportunityDeadline = fundingOpportunityDeadline;
-	}	
+	
 }
